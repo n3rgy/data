@@ -1,0 +1,50 @@
+<html>
+<header>
+<title>SMETS Lookup System</title>
+</header>
+<body bgcolor="#aaaaaa">
+<img src="https://data.n3rgy.com/assets/img/logo/logo-light.png">
+<font size=+4><b>Data Demonstrator</b></font>
+<p><br>
+<p>
+<h1>Browse data</h1>
+<form action="/cgi-bin/data.py" method="get">
+<input type="submit" value="Browse">
+</form>
+<p>
+
+
+
+<h1>Consent</h1>
+<form action="/cgi-bin/consent2.py" method="get">
+<p>
+Enter MPAN
+<input type="text" name="mpxn" size=20>
+<p>
+<input type="submit" name="action" value="Consent">
+<input type="submit" name="action" value="Withdrawn">
+</form>
+<p>
+
+
+<h1>Query SM Inventory (SMETS2 only)</h1>
+<form action="/cgi-bin/smartinventory.py" method="post">
+Return anonymised results: 
+<label for="yes">Yes<input type="radio" name="privacy" value="true" checked>
+<label for="no">No<input type="radio" name="privacy" value="false">
+<br>
+Enter MPAN
+<input type="text" name="mpxn" size=20>
+OR Enter Device ID
+<input type="text" name="device" size=20>
+OR Enter UPRN
+<input type="text" name="uprn" size=20>
+<p>
+<input type="submit" value="Submit">
+</form>
+<p>
+
+
+
+</body>
+</html>
