@@ -64,8 +64,8 @@ def n3rgyWithdrawConsent(apiKey, mpxn):
 # errorUrl (eu): Return URL if failure
 #
 ct = "ihdmac_4"
-ru = "http://flatpi/sm"
-eu = "https://flatpi/sm"
+ru = "https://google.com"
+eu = "https://amazon.co.uk"
 AUTH="<<sign up at data.n3rgy.com for your license>>"
 
 
@@ -94,4 +94,4 @@ else:
 
 	print json.dumps(result)
 
-	print "<p><a href='/sm'>back</a>"
+	print "<p><a href='/'>back</a>"
