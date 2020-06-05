@@ -1,34 +1,105 @@
+<!DOCTYPE html>
 <html>
-<header>
-<title>SMETS Lookup System</title>
-</header>
-<body bgcolor="#aaaaaa">
-<img src="https://data.n3rgy.com/assets/img/logo/logo-light.png">
-<font size=+4><b>Data Demonstrator</b></font>
-<p><br>
+<head>
+<title>n3rgy data Smart Meter Demonstrator</title>
+<link rel="stylesheet" href="n3rgy.css">
+
+<script type="text/javascript">
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {   
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 06:00:01 UTC; path=/;';  
+    document.cookieform.apiKey.value = "";
+}
+
+function setAPIcookie() {
+
+    setCookie("n3rgyAuthorization",document.cookieform.service.value + ":" + document.cookieform.apiKey.value,1);
+}
+
+
+function loadAPIcookie() {
+    var n3rgyCookie = getCookie("n3rgyAuthorization");
+
+    if ( n3rgyCookie != null ) {
+	var cc = n3rgyCookie.split(":");
+	document.cookieform.apiKey.value = cc[1];
+	document.cookieform.service.value = cc[0];
+    }
+	
+}
+
+</script>
+
+</head>
+
+
+<body bgcolor="#637381" onload="JavaScript: loadAPIcookie()">>
+<center>
+<img src="https://data.n3rgy.com/assets/img/logo/logo-light.png"><br>
+<font size=+4 face=Lato color=white><b>Data Demonstrator</b></font>
 <p>
+In order to use this demonstrator please sign up at <a href="https://data.n3rgy.com/">https://data.n3rgy.com</a> and login to the Customer self service portal to receive your free sandbox API key.<br>
+All code used in this demonstrator is available at <a href="https://github.com/n3rgy/data">https://github.com/n3rgy/data</a>
+</center>
+<p>
+<h1>API Key</h1>
+Please set and check your API key and the service you wish to interact with, your API key and service (live/sandbox) preferences will be stored within a cookie and persist across all interactions until cleared or expired (1 day)
+<p>
+<form name="cookieform" onSubmit="Javascript:return setAPIcookie()">
+Live:<input type="radio" name="service" value="live"/>
+Sandbox:<input type="radio" name="service" value="sandbox"/><br>
+API Key: <input type="password" name="apiKey" length="20"><br>
+<input name="Submit" type="button" value="Set" onClick="JavaScript: setAPIcookie()">
+<input name="Submit" type="button" value="Clear" onClick="JavaScript: eraseCookie('n3rgyAuthorization')">
+</form>
+
+<p>
+<hr>
 <h1>Browse data</h1>
-<form action="/cgi-bin/data.py" method="get">
+<form action="/cgi-bin/n3rgy-data.py" method="get">
 <input type="submit" value="Browse">
 </form>
+<hr>
 <p>
 
 
 
 <h1>Consent</h1>
-<form action="/cgi-bin/consent2.py" method="get">
+<form action="/cgi-bin/n3rgy-consent.py" method="get">
 <p>
 Enter MPAN
 <input type="text" name="mpxn" size=20>
 <p>
 <input type="submit" name="action" value="Consent">
 <input type="submit" name="action" value="Withdrawn">
+<input type="submit" name="action" value="TConsent">
 </form>
+<i>Note: Trusted Consent demonstration is not available in live</i>
+<hr>
 <p>
 
 
 <h1>Query SM Inventory (SMETS2 only)</h1>
-<form action="/cgi-bin/smartinventory.py" method="post">
+<form action="/cgi-bin/n3rgy-smartinventory.py" method="post">
 Return anonymised results: 
 <label for="yes">Yes<input type="radio" name="privacy" value="true" checked>
 <label for="no">No<input type="radio" name="privacy" value="false">
@@ -42,6 +113,7 @@ OR Enter UPRN
 <p>
 <input type="submit" value="Submit">
 </form>
+<i>Note: Smart Meter inventory reports the devices, models and version deployed within a home. Only available from the SMETS2 ecosystem and not available to sandbox users</i>
 <p>
 
 
