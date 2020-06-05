@@ -162,4 +162,4 @@ else:
 
 	print json.dumps(result)
 
-print "<p><a href='/sm'>back</a></body></html>"
+print "<p><a href='/data'>back</a></body></html>"
