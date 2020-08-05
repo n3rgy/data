@@ -1,4 +1,11 @@
 # data
+
+Known defects and issues can be found at https://github.com/n3rgy/data/issues
+
+Release notes for platform updaates can be found at https://github.com/n3rgy/data/wiki/00-n3rgy-data-platform-wiki
+
+
+
 Sample scripts and routines to support developers using the n3rgy data platform.<p>
 
 -= CGI scripts to be run in a web environment =-<p>
