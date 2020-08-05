@@ -2,7 +2,7 @@
 
 Known defects and issues of the core n3rgy data platform can be found at https://github.com/n3rgy/data/issues
 
-Release notes for platform updaates can be found at https://github.com/n3rgy/data/wiki/00-n3rgy-data-platform-wiki
+Release notes for platform updaates can be found at https://github.com/n3rgy/data/wiki/n3rgy-data-platform-wiki
 
 
 
