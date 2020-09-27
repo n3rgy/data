@@ -151,7 +151,7 @@ elif form.getvalue('action') == "TConsent":
 		print "Live Trusted Consents not supported<p>\n"
 	else:
         	print "Adding Trusted consent on " + apiSrv + " for: " + form.getvalue('mpxn') + " on " + apiSrv + "<p>\n"
-        	result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Simon Smith Salford 30-04-2020 email", "2017-01-01", apiSrv)
+        	result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Sandbox Test Consent 1234", "2012-01-01", apiSrv)
 
         print json.dumps(result)
 
