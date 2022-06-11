@@ -38,7 +38,7 @@ def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv
 		burl = "https://portal-consent-sandbox.data.n3rgy.com/consent/"
 
 	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnUrl=" + returnUrl + "&errorUrl=" + errorUrl
-	eqs = urllib.parse.quote_plus(base64.b64encode(params.encode(qs)))
+	eqs = urllib.parse.quote_plus(base64.b64encode(qs.encode()))
 	
 	return(burl + eqs);
 	
