@@ -42,14 +42,14 @@ def n3rgyGetConsentSession(apiKey, mpxn, consentType, apiSrv):
 
 	return(sessionId);
 
-def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv, hp):
+def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv):
 
 	if (apiSrv == 'live' ):
 		burl = "https://portal-consent-v2.data.n3rgy.com/consent/"
 	else:
 		burl = "https://portal-consent-sandbox-v2.data.n3rgy.com/consent/"
 
-	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnUrl=" + returnUrl + "&errorUrl=" + errorUrl + "&highPriority=" + hp 
+	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnUrl=" + returnUrl + "&errorUrl=" + errorUrl 
 	eqs = urllib.quote_plus(base64.b64encode(qs))
 
 	return(burl + eqs);
@@ -154,7 +154,7 @@ if form.getvalue('action') == "Consent":
 
 	# Get Consent URL
 	#
-	consentURL = n3rgyGetConsentURL(sid, form.getvalue('mpxn'), ct, ru, eu, apiSrv, hp)
+	consentURL = n3rgyGetConsentURL(sid, form.getvalue('mpxn'), ct, ru, eu, apiSrv)
 
 	print "<p>Clock link below to continue to consent URL<p>"
 
