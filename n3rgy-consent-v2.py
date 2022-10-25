@@ -23,8 +23,8 @@ def n3rgyGetConsentSession(apiKey, mpxn, consentType, apiSrv):
 	spostdata={}
 	spostdata['mpxn'] = mpxn
 	spostdata['getHistoryData'] = 'true'
+	spostdata['automaticDirect'] = 'true'
 	spostdata['moveInDate'] = '2018-01-01'
-
 
 	headers= {'x-api-key': apiKey, 'Content-type' : 'application/json'}
 
@@ -32,24 +32,24 @@ def n3rgyGetConsentSession(apiKey, mpxn, consentType, apiSrv):
 	try:
 		sessionId = rdata.json()["sessionId"]
 	except:
-		print "<pre>"
-		print "URL: " + surl
-		print "Headers: " + json.dumps(headers)
-		print "Body: " + json.dumps(spostdata)
-		print "Return status: " + str(rdata.status_code)
-		print "Return reason: " + rdata.reason
-		print "</pre>"
+		print("<pre>")
+		print("URL: " + surl)
+		print("Headers: " + json.dumps(headers))
+		print("Body: " + json.dumps(spostdata))
+		print("Return status: " + str(rdata.status_code))
+		print("Return reason: " + rdata.reason)
+		print("</pre>")
 
 	return(sessionId);
 
-def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv):
+def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv, hp):
 
 	if (apiSrv == 'live' ):
 		burl = "https://portal-consent-v2.data.n3rgy.com/consent/"
 	else:
-		burl = "https://portal-consent--v2-sandbox.data.n3rgy.com/consent/"
+		burl = "https://portal-consent-v2-sandbox.data.n3rgy.com/consent/"
 
-	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnUrl=" + returnUrl + "&errorUrl=" + errorUrl 
+	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnURL=" + returnUrl + "&errorURL=" + errorUrl + "&highPriority=" + hp 
 	eqs = urllib.quote_plus(base64.b64encode(qs))
 
 	return(burl + eqs);
@@ -61,10 +61,8 @@ def n3rgyWithdrawConsent(apiKey, mpxn, apiSrv):
 	else:
 		wurl = "https://consent-v2-sandbox.data.n3rgy.com/consents/withdraw-consent"
 
-	#wurl = url + "/consents/withdraw-consent"
 	wurl = wurl + "?mpxn=" + mpxn
 
-	#headers= {'x-api-key': apiKey}
 	headers= {'x-api-key': apiKey, 'Content-type' : 'application/json'}
 
 	rdata = requests.put( url=wurl, headers=headers)
@@ -84,27 +82,24 @@ def n3rgyAddTrustedConsent(apiKey, mpxn, evidence, moveInDate, apiSrv):
 	else:
 		turl = "https://consent-v2-sandbox.data.n3rgy.com/consents/add-trusted-consent"
 
-        tpostdata={}
-        tpostdata['mpxn'] = mpxn
-        tpostdata['evidence'] = evidence
-        tpostdata['moveInDate'] = moveInDate
-        tpostdata['highPriority'] = "True"
-
-        headers=''
-
+	tpostdata={}
+	tpostdata['mpxn'] = mpxn
+	tpostdata['evidence'] = evidence
+	tpostdata['moveInDate'] = moveInDate
+	tpostdata['highPriority'] = "True"
 	headers= {'x-api-key': apiKey, 'Content-type' : 'application/json'}
+	rdata = requests.post( url=turl, data=json.dumps(tpostdata), headers=headers)
 
-        rdata = requests.post( url=turl, data=json.dumps(tpostdata), headers=headers)
+	print(str(rdata))
 
-	print str(rdata)
+	try:
+		rdata.json()['errors']
+		return(rdata.json()['errors'])
+	except:
+		yay = { 'code' : 204, 'message' : 'Success! you now have access'}
+		return(yay)
 
-        try:
-                rdata.json()['errors']
-        except:
-                yay = { 'code' : 204, 'message' : 'Success! you now have access'}
-                return(yay)
-        else:
-                return(rdata.json()['errors'])
+
 
 #
 # Set up consent parameters to get session key
@@ -115,12 +110,12 @@ def n3rgyAddTrustedConsent(apiKey, mpxn, evidence, moveInDate, apiSrv):
 #
 ct = "ihdmac_4"
 hp = "true"
-ru = "http://homebrew.n3rgy.com/data-v2"
-eu = "http://errorpage.com"
+ru = "https://homebrew.n3rgy.com/data-v2"
+eu = "https://errorpage.com"
 AUTH=""
 
-print "Content-type: text/html\n\n"
-print "<html><head><link rel='stylesheet' href='/n3rgy.css'></head><body>"
+print("Content-type: text/html\n\n")
+print("<html><head><link rel='stylesheet' href='/n3rgy.css'></head><body>")
 
 
 #
@@ -136,9 +131,10 @@ if 'HTTP_COOKIE' in os.environ:
                 cookie = cookie.split('=')
                 handler[cookie[0]] = cookie[1]
 
-if handler['n3rgyAuthorizationv2']:
+if 'n3rgyAuthorizationv2' in handler:
         (apiSrv,AUTH) = handler['n3rgyAuthorizationv2'].split(':')
-
+else:
+	print("no key set")
 
 form = cgi.FieldStorage()
 
@@ -148,38 +144,38 @@ if form.getvalue('action') == "Consent":
 	#
 	sid = n3rgyGetConsentSession(AUTH, form.getvalue('mpxn'), ct, apiSrv)
 
-	print "<center><h2>Behind the scenes...</h2>\n"
-	print "Setting up session key for this consent journey...<p>\n"
-	print "Got unique key: <i>" + sid + "</i><p><br><br>\n"
+	print("<center><h2>Behind the scenes...</h2>\n")
+	print("Setting up session key for this consent journey...<p>\n")
+	print("Got consent session key: <i>" + sid + "</i><p><br><br>\n")
 
 	# Get Consent URL
 	#
-	consentURL = n3rgyGetConsentURL(sid, form.getvalue('mpxn'), ct, ru, eu, apiSrv)
+	consentURL = n3rgyGetConsentURL(sid, form.getvalue('mpxn'), ct, ru, eu, apiSrv, hp)
 
-	print "<p>Clock link below to continue to consent URL<p>"
+	print("<p>Click link below to continue to consent portal<p>")
 
-	print "<pre><i>" + consentURL + "</i></pre>"
-	print "<pre>[ " + base64.b64decode(urllib.unquote(consentURL.split("/")[-1])) + " ]</pre>"
+	print("<i>" + consentURL + "</i><p>")
+	print("QueryString (decoded):<br><i>" + base64.b64decode(urllib.unquote(consentURL.split("/")[-1])) + "</i>")
 
-	print '<h2><a href=' + consentURL + '>click here to go</a></h2></center>'
+	print('<h2><a href=' + consentURL + '>click here to go</a></h2></center>')
 
 elif form.getvalue('action') == "TConsent":
 
 	if apiSrv == "live":
-		print "not supported<p>"
-        	#print "Adding Trusted consent on " + apiSrv + " for: " + form.getvalue('mpxn') + " on " + apiSrv + "<p>\n"
-        	#result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Test consent", "2013-01-01", apiSrv)
+		#print "Adding Trusted consent on " + apiSrv + " for: " + form.getvalue('mpxn') + " on " + apiSrv + "<p>\n"
+		print("Can't use this on live")
+		#result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Test consent", "2013-01-01", apiSrv)
 	else:
-        	print "Adding Trusted consent on " + apiSrv + " for: " + form.getvalue('mpxn') + " on " + apiSrv + "<p>\n"
-        	result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Sandbox consent", "2013-01-01", apiSrv)
+		print("Adding Trusted consent on " + apiSrv + " for: " + form.getvalue('mpxn') + " on " + apiSrv + "<p>\n")
+		result = n3rgyAddTrustedConsent(AUTH, form.getvalue('mpxn'), "Sandbox consent", "2013-01-01", apiSrv)
 
-        print json.dumps(result)
+	print(json.dumps(result))
 
 else:
 
-	print "Withdrawing consent on " + apiSrv + " for: " + form.getvalue('mpxn') + "<p>\n"
+	print("Withdrawing consent on " + apiSrv + " for: " + form.getvalue('mpxn') + "<p>\n")
 	result = n3rgyWithdrawConsent(AUTH, form.getvalue('mpxn'), apiSrv)
 
-	print json.dumps(result)
+	print(json.dumps(result))
 
-print "<p><a href='/data-v2'>back</a></body></html>"
+print("<p><a href='/data-v2'>back</a></body></html>")
