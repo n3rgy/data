@@ -18,7 +18,7 @@ def n3rgyGetConsentSession(apiKey, mpxn, consentType, apiSrv):
 	if (apiSrv == 'live' ):
 		surl = "https://consent-v2.data.n3rgy.com/consents/session?consentType=" + consentType
 	else:
-		surl = "https://consentsandbox-v2.data.n3rgy.com/consents/session?consentType=" + consentType
+		surl = "https://consent-v2-sandbox.data.n3rgy.com/consents/session?consentType=" + consentType
 
 	spostdata={}
 	spostdata['mpxn'] = mpxn
@@ -47,7 +47,7 @@ def n3rgyGetConsentURL(sessionId, mpxn, consentType, returnUrl, errorUrl, apiSrv
 	if (apiSrv == 'live' ):
 		burl = "https://portal-consent-v2.data.n3rgy.com/consent/"
 	else:
-		burl = "https://portal-consent-sandbox-v2.data.n3rgy.com/consent/"
+		burl = "https://portal-consent--v2-sandbox.data.n3rgy.com/consent/"
 
 	qs = "sessionId=" + sessionId + "&mpxn=" + mpxn + "&consentType=" + consentType + "&returnUrl=" + returnUrl + "&errorUrl=" + errorUrl 
 	eqs = urllib.quote_plus(base64.b64encode(qs))
@@ -59,7 +59,7 @@ def n3rgyWithdrawConsent(apiKey, mpxn, apiSrv):
 	if (apiSrv == 'live' ):
 		wurl = "https://consent-v2.data.n3rgy.com/consents/withdraw-consent"
 	else:
-		wurl = "https://consentsandbox-v2.data.n3rgy.com/consents/withdraw-consent"
+		wurl = "https://consent-v2-sandbox.data.n3rgy.com/consents/withdraw-consent"
 
 	#wurl = url + "/consents/withdraw-consent"
 	wurl = wurl + "?mpxn=" + mpxn
@@ -82,7 +82,7 @@ def n3rgyAddTrustedConsent(apiKey, mpxn, evidence, moveInDate, apiSrv):
 	if (apiSrv == 'live' ):
 		turl = "https://consent-v2.data.n3rgy.com/consents/add-trusted-consent"
 	else:
-		turl = "https://consentsandbox-v2.data.n3rgy.com/consents/add-trusted-consent"
+		turl = "https://consent-v2-sandbox.data.n3rgy.com/consents/add-trusted-consent"
 
         tpostdata={}
         tpostdata['mpxn'] = mpxn
