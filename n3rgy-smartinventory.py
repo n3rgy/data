@@ -122,7 +122,7 @@ rdata = requests.post( url, data=json.dumps(postdata), headers=headers )
 fetchurl = rdata.json()["uri"]
 
 #
-# keep requesting until file is available
+# keep requesting until file is available, the uri will return 404 until the file is written (the transaction is asynchronous) 
 #
 sys.stderr.write(".")
 time.sleep(5)
